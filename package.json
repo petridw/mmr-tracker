@@ -1,0 +1,11 @@
+{
+  "name": "mmr-site",
+  "version": "1.0.0",
+  "description": "Basic site for novlovplov mmr viewing\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "David Petri <petridw@gmail.com> (davidpetri.com)",
+  "license": "ISC"
+}
