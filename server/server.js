@@ -1,18 +1,18 @@
 var Hapi = require('hapi');
 var Good = require('good');
+var Path = require('path');
 
 
 var server = new Hapi.Server();
+
 server.connection({ 
     host: 'localhost', 
-    port: process.env.PORT || 3000 
-});
-
-server.route({
-    method: 'GET',
-    path:'/hello', 
-    handler: function (request, reply) {
-        reply('hello world');
+    port: process.env.PORT || 3000,
+    routes: {
+      cors: true,
+      files: {
+        relativeTo: Path.join(__dirname, '/../client')
+      }
     }
 });
 
@@ -28,6 +28,12 @@ server.register([
             }
         }]
     }
+  },
+  {
+    register: require('./util/static/static')
+  },
+  {
+    register: require('./util/api/accountAPI')
   }
 ], function (err) {
     if (err) throw err;
