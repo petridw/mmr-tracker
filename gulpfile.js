@@ -46,4 +46,5 @@ function serve() {
   });
 }
 
-gulp.task('default', ['js', 'serve']);
+gulp.task('dev', ['js', 'serve']);
+gulp.task('prod', ['serve']);
