@@ -29,7 +29,12 @@ var accountsController = {
   create: function(request, reply) {
     var account = request.payload;
     
-    Account.create(account).then(function(result) {
+    Account.findOrCreate({
+      where: {
+        accountID: account.accountID
+      },
+      defaults: account
+    }).then(function(result, created) {
       reply(result);
     }, function(err) {
       reply(Boom.wrap(err, 422));
