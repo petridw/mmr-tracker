@@ -1,14 +1,13 @@
 var React = require('react');
+var AccountList = require('./components/AccountList');
 
 var Main = React.createClass({
-  handleClick() {
-    throw new Error('messed up');
-  },
-  render() {
+  render: function() {
     return (
-      <div onClick={this.handleClick}>
-        moar
-      </div>
+      <main>
+        <h1>the novlovplov challenge</h1>
+        <AccountList />
+      </main>
     );
   }
 });
