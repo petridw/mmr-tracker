@@ -1,5 +1,5 @@
 var Sequelize = require('sequelize');
-var sequelize = require('./../sequelize');
+var sequelize = require('./../db/sequelize');
 
 var Match = sequelize.define('match', {
   matchID: {

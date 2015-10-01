@@ -1,11 +1,15 @@
 var Sequelize = require('sequelize');
-var sequelize = require('./../sequelize');
+var sequelize = require('./../db/sequelize');
 
 var Account = sequelize.define('account', {
   accountID: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.STRING,
     field: 'account_id',
     primaryKey: true
+  },
+  steamID: {
+    type: Sequelize.STRING,
+    field: 'steam_id'
   },
   username: {
     type: Sequelize.STRING
@@ -19,7 +23,7 @@ var Account = sequelize.define('account', {
     field: 'current_mmr'
   }
 }, {
-  freezeTableName: true // Model tableName will be the same as the model name
+  freezeTableName: true
 });
 
 module.exports = Account;

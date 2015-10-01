@@ -1,9 +1,20 @@
 var Hapi = require('hapi');
 var Good = require('good');
 var Path = require('path');
+var db = require('./util/db/sequelize');
+var Account = require('./util/models/Account');
+var Match = require('./util/models/Match');
 
+Account.sync({ force: true });
+Match.sync({ force: true });
 
-var server = new Hapi.Server();
+var server = new Hapi.Server({
+  connections: {
+    router: {
+      stripTrailingSlash: true
+    }
+  }
+});
 
 server.connection({ 
     host: 'localhost', 
@@ -33,7 +44,7 @@ server.register([
     register: require('./util/static/static')
   },
   {
-    register: require('./util/api/accountAPI')
+    register: require('./util/api/accountsAPI')
   }
 ], function (err) {
     if (err) throw err;
