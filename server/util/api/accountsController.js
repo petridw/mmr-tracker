@@ -50,12 +50,24 @@ var accountsController = {
         accountID: account.accountID
       }
     }).then(function(result) {
+      if (!result) return reply(Boom.notFound('Record was not found. Please create before updating.'));
+      
       _.extend(result, account);
       result.save().then(function(result) {
         reply(result);
       }, function(err) {
         reply(Boom.wrap(err, 422));
       });
+    }, function(err) {
+      reply(Boom.wrap(err, 422));
+    });
+  },
+  
+  upsert: function(request, reply) {
+    var account = request.payload;
+    
+    Account.upsert(account).then(function(created) {
+      reply(created);
     }, function(err) {
       reply(Boom.wrap(err, 422));
     });

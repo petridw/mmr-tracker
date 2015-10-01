@@ -5,11 +5,13 @@ var Account = sequelize.define('account', {
   accountID: {
     type: Sequelize.STRING,
     field: 'account_id',
-    primaryKey: true
+    primaryKey: true,
+    unique: true
   },
   steamID: {
     type: Sequelize.STRING,
-    field: 'steam_id'
+    field: 'steam_id',
+    unique: true
   },
   username: {
     type: Sequelize.STRING
