@@ -1,12 +1,13 @@
 var Hapi = require('hapi');
 var Good = require('good');
 var Path = require('path');
+var config = require('config');
 var db = require('./util/db/sequelize');
 var Account = require('./util/models/Account');
 var Match = require('./util/models/Match');
 
-Account.sync({ force: true });
-Match.sync({ force: true });
+Account.sync();
+Match.sync();
 
 var server = new Hapi.Server({
   connections: {
@@ -17,8 +18,8 @@ var server = new Hapi.Server({
 });
 
 server.connection({ 
-    host: 'localhost', 
-    port: process.env.PORT || 3000,
+    host: config.get('server').host,
+    port: config.get('server').port,
     routes: {
       cors: true,
       files: {

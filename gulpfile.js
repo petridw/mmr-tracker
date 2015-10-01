@@ -40,7 +40,7 @@ function bundle() {
 
 function serve() {
   nodemon({
-    script: './server/server.js',
+    script: './server/index.js',
     ext: 'html js',
     ignore: ['client/']
   });
