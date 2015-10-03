@@ -1,5 +1,5 @@
 var Joi = require('joi');
-var accountController = require('./matchController');
+var matchController = require('./matchController');
 
 exports.register = function(server, options, next) {
 
@@ -57,5 +57,5 @@ exports.register = function(server, options, next) {
 };
 
 exports.register.attributes = {
-    name: 'accountAPI'
+    name: 'matchAPI'
 };

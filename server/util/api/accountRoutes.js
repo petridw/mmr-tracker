@@ -33,7 +33,7 @@ exports.register = function(server, options, next) {
     {
       method: 'PUT',
       path: '/api/accounts',
-      handler: accountController.upsert,
+      handler: accountController.update,
       config: {
         validate: {
           payload: {

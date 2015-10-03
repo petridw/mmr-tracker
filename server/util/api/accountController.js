@@ -1,6 +1,7 @@
 var Boom = require('boom');
 var db = require('../../../models');
 var _ = require('lodash');
+var Path = require('path');
 
 var Account = db.account;
 
@@ -46,6 +47,11 @@ var accountController = {
   
   update: function(request, reply) {
     var account = request.payload;
+    var matchID = account.matchID;
+    var startTime = account.startTime;
+    
+    delete account.matchID;
+    delete account.startTime;
     
     Account.findOne({
       where: {
@@ -54,9 +60,29 @@ var accountController = {
     }).then(function(result) {
       if (!result) return reply(Boom.notFound('Record was not found. Please create before updating.'));
       
+      var mmrChange = account.currentMMR - result.currentMMR;
+      
       _.extend(result, account);
       result.save().then(function(result) {
-        reply(result);
+        
+        var server = require(Path.join(__dirname, '../../index.js'));
+        
+        
+        // TODO: either use full address (need to get host and port from config),
+        // or figure out a better way to do this. Is internal routing the way to go?
+        server.inject({
+          url: '/api/match',
+          method: 'POST',
+          payload: { 
+            matchID: matchID,
+            accountID: account.accountID,
+            mmrChange: mmrChange,
+            startTime: startTime
+          }
+        }, function(response) {
+          reply(response);
+        });
+        
       }, function(err) {
         reply(Boom.wrap(err, 422));
       });
@@ -67,9 +93,19 @@ var accountController = {
   
   upsert: function(request, reply) {
     var account = request.payload;
+    var matchID = account.matchID;
+    delete account.matchID;
     
     Account.upsert(account).then(function(created) {
-      reply(created);
+      
+      server.inject({
+        url: '/api/match',
+        method: 'POST',
+        payload: { matchID: matchID, accountID: account.accountID }
+      }, function(response) {
+        reply(created);
+      });
+      
     }, function(err) {
       reply(Boom.wrap(err, 422));
     });
