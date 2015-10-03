@@ -2,6 +2,7 @@ var Boom = require('boom');
 var db = require('../../../models');
 var _ = require('lodash');
 var Path = require('path');
+var config = require('config');
 
 var Account = db.account;
 
@@ -59,29 +60,36 @@ var accountController = {
       }
     }).then(function(result) {
       if (!result) return reply(Boom.notFound('Record was not found. Please create before updating.'));
-      
-      var mmrChange = account.currentMMR - result.currentMMR;
-      
+            
       _.extend(result, account);
       result.save().then(function(result) {
         
         var server = require(Path.join(__dirname, '../../index.js'));
         
-        
-        // TODO: either use full address (need to get host and port from config),
-        // or figure out a better way to do this. Is internal routing the way to go?
-        server.inject({
-          url: '/api/match',
-          method: 'POST',
-          payload: { 
+        if (matchID && startTime) {
+  
+          var mmrChange = account.currentMMR - result.currentMMR;
+          
+          var match = {
             matchID: matchID,
             accountID: account.accountID,
             mmrChange: mmrChange,
             startTime: startTime
-          }
-        }, function(response) {
-          reply(response);
-        });
+          };
+          
+          server.inject({
+            url: '/api/match',
+            method: 'POST',
+            payload: match
+          }, function(res) {
+            console.log(res.result);
+            reply(res.result);
+          });
+          
+        } else {
+          reply(result);
+        }
+
         
       }, function(err) {
         reply(Boom.wrap(err, 422));

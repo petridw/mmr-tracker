@@ -3,6 +3,7 @@ var db = require('../../../models');
 var _ = require('lodash');
 
 var Account = db.account;
+var Match = db.match;
 
 var matchController = {
   getAll: function(req, reply) {

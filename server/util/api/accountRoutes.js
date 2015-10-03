@@ -41,7 +41,9 @@ exports.register = function(server, options, next) {
             steamID: Joi.string(),
             username: Joi.string(),
             startingMMR: Joi.number().integer().positive(),
-            currentMMR: Joi.number().integer().positive()
+            currentMMR: Joi.number().integer().positive(),
+            matchID: Joi.string(),
+            startTime: Joi.date()
           }
         }
       }

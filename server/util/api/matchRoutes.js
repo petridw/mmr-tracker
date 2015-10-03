@@ -23,7 +23,6 @@ exports.register = function(server, options, next) {
           payload: {
             matchID: Joi.string().required(),
             startTime: Joi.date().required(),
-            win: Joi.boolean().required(),
             mmrChange: Joi.number().integer().required(),
             accountID: Joi.string().required()
           }
