@@ -24,6 +24,12 @@ module.exports = function(sequelize, DataTypes) {
     accountID: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    createdAt: {
+      type: DataTypes.DATE
+    },
+    updatedAt: {
+      type: DataTypes.DATE
     }
   }, {
     classMethods: {

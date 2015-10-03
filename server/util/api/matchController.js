@@ -31,9 +31,7 @@ var matchController = {
   
   create: function(request, reply) {
     var match = request.payload;
-    
-    console.log('making match', match);
-    
+        
     match.win = match.mmrChange >= 0 ? true : false;
     
     Match.findOrCreate({

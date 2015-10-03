@@ -22,6 +22,15 @@ module.exports = function(sequelize, DataTypes) {
     currentMMR: {
       type: DataTypes.INTEGER,
       field: 'current_mmr'
+    },
+    lastPlayed: {
+      type: DataTypes.DATE
+    },
+    createdAt: {
+      type: DataTypes.DATE
+    },
+    updatedAt: {
+      type: DataTypes.DATE
     }
   }, {
     classMethods: {

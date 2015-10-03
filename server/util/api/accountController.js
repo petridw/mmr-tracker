@@ -47,12 +47,17 @@ var accountController = {
   },
   
   update: function(request, reply) {
-    var account = request.payload;
-    var matchID = account.matchID;
-    var startTime = account.startTime;
+    var matchID = request.payload.matchID;
+    var startTime = request.payload.startTime;
     
-    delete account.matchID;
-    delete account.startTime;
+    var account = {
+      accountID: request.payload.accountID,
+      steamID: request.payload.steamID,
+      username: request.payload.username,
+      startingMMR: request.payload.startingMMR,
+      currentMMR: request.payload.currentMMR,
+      lastPlayed: startTime
+    };
     
     Account.findOne({
       where: {
@@ -60,7 +65,7 @@ var accountController = {
       }
     }).then(function(result) {
       if (!result) return reply(Boom.notFound('Record was not found. Please create before updating.'));
-            
+      
       _.extend(result, account);
       result.save().then(function(result) {
         
@@ -76,7 +81,7 @@ var accountController = {
             mmrChange: mmrChange,
             startTime: startTime
           };
-          
+                    
           server.inject({
             url: '/api/match',
             method: 'POST',
