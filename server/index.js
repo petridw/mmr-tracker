@@ -2,12 +2,10 @@ var Hapi = require('hapi');
 var Good = require('good');
 var Path = require('path');
 var config = require('config');
-var db = require('./util/db/sequelize');
-var Account = require('./util/models/Account');
-var Match = require('./util/models/Match');
-
-Account.sync();
-Match.sync();
+// var db = require('./util/db/sequelize');
+// var Account = require('./util/models/Account');
+// var Match = require('./util/models/Match');
+var db = require('../models');
 
 var server = new Hapi.Server({
   connections: {

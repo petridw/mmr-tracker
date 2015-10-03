@@ -1,6 +1,8 @@
 var Boom = require('boom');
-var Account = require('../models/Account');
+var db = require('../../../models');
 var _ = require('lodash');
+
+var Account = db.account;
 
 var accountsController = {
   getAll: function(req, reply) {

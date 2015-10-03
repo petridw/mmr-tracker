@@ -1,0 +1,34 @@
+'use strict';
+module.exports = function(sequelize, DataTypes) {
+  var Account = sequelize.define('Account', {
+    accountID: {
+      type: DataTypes.STRING,
+      field: 'account_id',
+      primaryKey: true,
+      unique: true
+    },
+    steamID: {
+      type: DataTypes.STRING,
+      field: 'steam_id',
+      unique: true
+    },
+    username: {
+      type: DataTypes.STRING
+    },
+    startingMMR: {
+      type: DataTypes.INTEGER,
+      field: 'starting_mmr'
+    },
+    currentMMR: {
+      type: DataTypes.INTEGER,
+      field: 'current_mmr'
+    }
+  }, {
+    classMethods: {
+      associate: function(models) {
+        // associations can be defined here
+      }
+    }
+  });
+  return Account;
+};
