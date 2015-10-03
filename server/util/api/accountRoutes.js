@@ -1,5 +1,5 @@
 var Joi = require('joi');
-var accountsController = require('./accountsController');
+var accountController = require('./accountController');
 
 exports.register = function(server, options, next) {
 
@@ -7,17 +7,17 @@ exports.register = function(server, options, next) {
     {
       method: 'GET',
       path: '/api/accounts',
-      handler: accountsController.getAll
+      handler: accountController.getAll
     },
     {
       method: 'GET',
       path: '/api/accounts/{account}',
-      handler: accountsController.get
+      handler: accountController.get
     },
     {
       method: 'POST',
       path: '/api/accounts',
-      handler: accountsController.create,
+      handler: accountController.create,
       config: {
         validate: {
           payload: {
@@ -33,7 +33,7 @@ exports.register = function(server, options, next) {
     {
       method: 'PUT',
       path: '/api/accounts',
-      handler: accountsController.upsert,
+      handler: accountController.upsert,
       config: {
         validate: {
           payload: {
@@ -49,7 +49,7 @@ exports.register = function(server, options, next) {
     {
       method: 'DELETE',
       path: '/api/accounts/{account}',
-      handler: accountsController.delete
+      handler: accountController.delete
     }
   ]);
   

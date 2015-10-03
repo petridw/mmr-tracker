@@ -43,7 +43,10 @@ server.register([
     register: require('./util/static/static')
   },
   {
-    register: require('./util/api/accountsAPI')
+    register: require('./util/api/accountRoutes')
+  },
+  {
+    register: require('./util/api/matchRoutes')
   }
 ], function (err) {
     if (err) throw err;

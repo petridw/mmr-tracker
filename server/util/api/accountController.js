@@ -4,7 +4,7 @@ var _ = require('lodash');
 
 var Account = db.account;
 
-var accountsController = {
+var accountController = {
   getAll: function(req, reply) {
     Account.findAll().then(function(accounts) {
       reply(accounts);  
@@ -80,4 +80,4 @@ var accountsController = {
   }
 };
 
-module.exports = accountsController;
+module.exports = accountController;
