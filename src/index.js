@@ -4,12 +4,9 @@ var AccountList = require('./components/AccountList');
 var Main = React.createClass({
   render: function() {
     return (
-      <main>
-        <h1>the novlovplov challenge</h1>
-        <AccountList />
-      </main>
+      <AccountList />
     );
   }
 });
 
-React.render(<Main />, document.body);
+React.render(<Main />, document.getElementById('mmrapp'));

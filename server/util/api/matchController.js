@@ -16,7 +16,7 @@ var matchController = {
   },
   
   get: function(request, reply) {
-    var matchID = '_' + encodeURIComponent(request.params.match);
+    var matchID = encodeURIComponent(request.params.match);
     
     Match.findOne({
       where: {
