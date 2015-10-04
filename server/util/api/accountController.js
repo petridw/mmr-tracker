@@ -69,7 +69,7 @@ var accountController = {
       var mmrChange = account.currentMMR - result.currentMMR;
       
       _.extend(result, account);
-      result.save().then(function(result) {
+      result.save().then(function(updated_account) {
         
         var server = require(Path.join(__dirname, '../../index.js'));
         
@@ -81,18 +81,19 @@ var accountController = {
             mmrChange: mmrChange,
             startTime: startTime
           };
-                    
+          
+          // why do this when I can make a match directly w the db?
           server.inject({
             url: '/api/match',
             method: 'POST',
             payload: match
           }, function(res) {
-            console.log(res.result);
             reply(res.result);
           });
           
+          
         } else {
-          reply(result);
+          reply(updated_account);
         }
 
         

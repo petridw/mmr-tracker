@@ -32,7 +32,7 @@ var matchController = {
   create: function(request, reply) {
     var match = request.payload;
         
-    match.win = match.mmrChange >= 0 ? true : false;
+    match.win = match.mmrChange >= 0;
     
     Match.findOrCreate({
       where: {
