@@ -11,12 +11,12 @@ exports.register = function(server, options, next) {
     },
     {
       method: 'GET',
-      path: '/api/accounts/{account}',
+      path: '/api/account/{account}',
       handler: accountController.get
     },
     {
       method: 'POST',
-      path: '/api/accounts',
+      path: '/api/account',
       handler: accountController.create,
       config: {
         validate: {
@@ -32,7 +32,7 @@ exports.register = function(server, options, next) {
     },
     {
       method: 'PUT',
-      path: '/api/accounts',
+      path: '/api/account',
       handler: accountController.update,
       config: {
         validate: {
@@ -50,7 +50,7 @@ exports.register = function(server, options, next) {
     },
     {
       method: 'DELETE',
-      path: '/api/accounts/{account}',
+      path: '/api/account/{account}',
       handler: accountController.delete
     }
   ]);

@@ -6,7 +6,7 @@ exports.register = function(server, options, next) {
   server.route([
     {
       method: 'GET',
-      path: '/api/match',
+      path: '/api/matches',
       handler: matchController.getAll
     },
     {
