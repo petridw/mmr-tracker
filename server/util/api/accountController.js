@@ -66,15 +66,15 @@ var accountController = {
     }).then(function(result) {
       if (!result) return reply(Boom.notFound('Record was not found. Please create before updating.'));
       
+      var mmrChange = account.currentMMR - result.currentMMR;
+      
       _.extend(result, account);
       result.save().then(function(result) {
         
         var server = require(Path.join(__dirname, '../../index.js'));
         
         if (matchID && startTime) {
-  
-          var mmrChange = account.currentMMR - result.currentMMR;
-          
+            
           var match = {
             matchID: matchID,
             accountID: account.accountID,
