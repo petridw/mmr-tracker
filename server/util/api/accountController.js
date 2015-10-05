@@ -49,6 +49,7 @@ var accountController = {
   update: function(request, reply) {
     var matchID = request.payload.matchID;
     var startTime = request.payload.startTime;
+    var mmrChange = request.payload.mmrChange;
     
     var account = {
       accountID: request.payload.accountID,
@@ -65,15 +66,13 @@ var accountController = {
       }
     }).then(function(result) {
       if (!result) return reply(Boom.notFound('Record was not found. Please create before updating.'));
-      
-      var mmrChange = account.currentMMR - result.currentMMR;
-      
+            
       _.extend(result, account);
       result.save().then(function(updated_account) {
         
         var server = require(Path.join(__dirname, '../../index.js'));
         
-        if (matchID && startTime) {
+        if (matchID && startTime && mmrChange) {
             
           var match = {
             matchID: matchID,

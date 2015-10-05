@@ -43,7 +43,8 @@ exports.register = function(server, options, next) {
             startingMMR: Joi.number().integer().positive(),
             currentMMR: Joi.number().integer().positive(),
             matchID: Joi.string(),
-            startTime: Joi.date()
+            startTime: Joi.date(),
+            mmrChange: Joi.number().integer()
           }
         }
       }
