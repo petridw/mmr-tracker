@@ -20,6 +20,7 @@
     "babelify": "^6.2.0",
     "boom": "^2.9.0",
     "browserify": "^11.0.1",
+    "chartist": "^0.9.4",
     "config": "^1.16.0",
     "cron": "^1.0.9",
     "good": "^6.4.0",
