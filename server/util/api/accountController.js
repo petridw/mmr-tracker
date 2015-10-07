@@ -5,6 +5,7 @@ var Path = require('path');
 var config = require('config');
 
 var Account = db.account;
+var Match = db.match;
 
 var accountController = {
   getAll: function(req, reply) {
@@ -17,12 +18,19 @@ var accountController = {
   },
   
   get: function(request, reply) {
-    var accountID = '_' + encodeURIComponent(request.params.account);
+    var accountID = encodeURIComponent(request.params.account);
+    
+    if (accountID.charAt(0) !== '_') {
+      return reply.redirect('/api/account/_' + accountID);
+    }
     
     Account.findOne({
       where: {
         accountID: accountID
-      }
+      },
+      include: [
+        { model: Match, as: 'Matches' }
+      ]
     }).then(function(account) {
       reply(account);
     }, function(err) {

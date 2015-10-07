@@ -1,5 +1,6 @@
 var React = require('react');
 var Account = require('./Account');
+var LeaderChart = require('./LeaderChart');
 var $ = require('jquery');
 
 var AccountList = React.createClass({
@@ -10,6 +11,7 @@ var AccountList = React.createClass({
   
   componentDidMount: function() {
     var _this = this;
+    
     $.get('/api/accounts', function(result) {
       _this.setState({ accounts: result });
     });
@@ -24,9 +26,12 @@ var AccountList = React.createClass({
     });
     
     return (
-      <ul>
-        {accounts}
-      </ul>
+      <div>
+        <LeaderChart />
+        <ul>
+          {accounts}
+        </ul>
+      </div>
     );
   }
 });

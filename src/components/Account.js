@@ -2,7 +2,7 @@ var React = require('react');
 
 var Account = React.createClass({
   
-  render() {
+  render: function() {
     return (
       <li>
         <ul className="account">
