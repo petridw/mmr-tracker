@@ -65,7 +65,7 @@ var accountController = {
       username: request.payload.username,
       startingMMR: request.payload.startingMMR,
       currentMMR: request.payload.currentMMR,
-      lastPlayed: startTime
+      lastPlayed: request.payload.lastPlayed || startTime
     };
     
     Account.findOne({
