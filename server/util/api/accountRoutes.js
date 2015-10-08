@@ -44,7 +44,8 @@ exports.register = function(server, options, next) {
             currentMMR: Joi.number().integer().positive(),
             matchID: Joi.string(),
             startTime: Joi.date(),
-            mmrChange: Joi.number().integer()
+            mmrChange: Joi.number().integer(),
+            lastPlayed: Joi.date()
           }
         }
       }
