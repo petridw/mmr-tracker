@@ -9,6 +9,8 @@ var sourcemaps = require('gulp-sourcemaps');
 var gutil = require('gulp-util');
 var assign = require('lodash.assign');
 var buffer = require('vinyl-buffer');
+var sass = require('gulp-sass');
+var concatCss = require('gulp-concat-css');
 
 var customOpts = {
   entries: ['./src/index.js'],
@@ -22,9 +24,30 @@ b.transform(babelify);
 
 gulp.task('js', bundle);
 gulp.task('serve', serve);
+gulp.task('scss', compileScss);
+gulp.task('scss-dev', compileScssSourcemaps);
+gulp.task('scss:watch', watchScss);
 
 b.on('update', bundle);
 b.on('log', gutil.log); //output build logs to terminal
+
+function compileScss() {
+  gulp.src('./scss/application.scss')
+    .pipe(sass({ outputStyle: 'compressed'}).on('error', sass.logError))
+    .pipe(gulp.dest('./client/css'));
+}
+
+function compileScssSourcemaps() {
+  gulp.src('./scss/application.scss')
+    .pipe(sourcemaps.init())
+    .pipe(sass({ outputStyle: 'compressed'}).on('error', sass.logError))
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest('./client/css'));
+}
+
+function watchScss() {
+  gulp.watch('./scss/*.scss', ['sass-dev']);
+}
   
 function bundle() {
   return b.bundle()
@@ -46,5 +69,5 @@ function serve() {
   });
 }
 
-gulp.task('dev', ['js', 'serve']);
-gulp.task('prod', ['serve']);
+gulp.task('dev', ['js', 'scss-dev', 'scss:watch', 'serve']);
+gulp.task('prod', ['scss', 'serve']);

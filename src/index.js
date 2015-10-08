@@ -1,12 +1,14 @@
 var React = require('react');
+var ReactDOM = require('react-dom');
 var AccountList = require('./components/AccountList');
+var LeaderChart = require('./components/LeaderChart');
 
 var Main = React.createClass({
   render: function() {
     return (
-      <AccountList />
+      <LeaderChart />
     );
   }
 });
 
-React.render(<Main />, document.getElementById('mmrapp'));
+ReactDOM.render(<Main />, document.getElementById('mmrapp'));
