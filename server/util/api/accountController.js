@@ -74,7 +74,9 @@ var accountController = {
       }
     }).then(function(result) {
       if (!result) return reply(Boom.notFound('Record was not found. Please create before updating.'));
-            
+      
+      console.log('Updated account', result);
+      
       _.extend(result, account);
       result.save().then(function(updated_account) {
         

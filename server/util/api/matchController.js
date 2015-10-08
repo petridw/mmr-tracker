@@ -34,12 +34,8 @@ var matchController = {
         
     match.win = match.mmrChange >= 0;
     
-    Match.findOrCreate({
-      where: {
-        matchID: match.matchID
-      },
-      defaults: match
-    }).then(function(result, created) {
+    Match.create(match).then(function(result) {
+      console.log('created match', result);
       reply(result);
     }, function(err) {
       reply(Boom.wrap(err, 422));
@@ -59,6 +55,7 @@ var matchController = {
       
       _.extend(result, match);
       result.save().then(function(result) {
+        console.log('Updated match', result);
         reply(result);
       }, function(err) {
         reply(Boom.wrap(err, 422));
