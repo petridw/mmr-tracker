@@ -58,6 +58,7 @@ var accountController = {
     var matchID = request.payload.matchID;
     var startTime = request.payload.startTime;
     var mmrChange = request.payload.mmrChange;
+    var hero = request.payload.hero;
     
     var account = {
       accountID: request.payload.accountID,
@@ -88,7 +89,8 @@ var accountController = {
             matchID: matchID,
             accountID: account.accountID,
             mmrChange: mmrChange,
-            startTime: startTime
+            startTime: startTime,
+            hero: hero
           };
           
           // why do this when I can make a match directly w the db?

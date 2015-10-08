@@ -45,7 +45,8 @@ exports.register = function(server, options, next) {
             matchID: Joi.string(),
             startTime: Joi.date(),
             mmrChange: Joi.number().integer(),
-            lastPlayed: Joi.date()
+            lastPlayed: Joi.date(),
+            hero: Joi.number().integer()
           }
         }
       }
