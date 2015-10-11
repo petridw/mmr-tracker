@@ -22,7 +22,7 @@ exports.register = function(server, options, next) {
         validate: {
           payload: {
             matchID: Joi.string().required(),
-            startTime: Joi.date().required(),
+            startTime: Joi.date(),
             mmrChange: Joi.number().integer().required(),
             accountID: Joi.string().required(),
             hero: Joi.number().integer()

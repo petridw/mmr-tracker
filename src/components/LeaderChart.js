@@ -42,22 +42,57 @@ var LeaderChart = React.createClass({
     
   render: function() {
     
-    var labels = makeHours("2015-9-28");
-    
+    var labels = makeTimes("2015-9-28", 'day');
+        
     var series = this.state.accounts.map(function(matches) {
       // account is an array of matches
+      var current = 0;
+      var result = labels
+        .map(function(label, index, array) {
+          var todaysMatches = matches
+            .filter(function(match, index) {
+              return moment(match.startTime).isSame(moment(label), 'day');
+            });
+          
+          if (todaysMatches.length === 0) {
+              return null;
+          } else {
+            // console.log(todaysMatches);
+            return todaysMatches
+              .reduce(function(acc, match) {
+                if (moment(match.startTime).isAfter(moment(acc.startTime))) {
+                  match.change = acc.change;
+                  return match;
+                } else {
+                  acc.change = match.change;
+                  return acc;
+                }
+              });
+          }
+        })
+        .map(function(day){
+          if (day) {
+            current = day.change;
+            return day.change;
+          } else {
+            return current;
+          }
+        });
       
-      return matches.map(function(match) {
-        return match.change;
-      });
+      return {
+        // className: matches.username,
+        name: matches.username,
+        data: result
+      };
     });
-        
+            
     var options = {
-      high: 100,
-      low: -100,
+      high: 200,
+      low: -200,
+      height: '500px',
       axisX: {
         labelInterpolationFnc: function(value, index) {
-          return index % 12 === 0 ? value : null;
+          return moment(value).format('MMM D YYYY');
         }
       }
     };
@@ -80,14 +115,14 @@ var LeaderChart = React.createClass({
   
 });
 
-function makeHours(start) {
+function makeTimes(start, unit) {
   var now = moment();
   start = moment(start);
   var result = [];
     
   while (start.isBefore(now)) {
     result.push(start.format());
-    start.set('hour', start.get('hour') + 1);
+    start.set(unit, start.get(unit) + 1);
   }
   
   return result;
@@ -102,29 +137,19 @@ function parseAccount(account) {
     // .filter(function(match) { return moment(match.startTime).isAfter(oneWeekAgo); })
     .map(function(match) {
       current += match.mmrChange;
+      // if (account.username === 'sandfriend') {
+      //   console.log({
+      //     change: current - baseline,
+      //     mmr: current,
+      //     startTime: match.startTime
+      //   });
+      // }
       return {
         change: current - baseline,
         mmr: current,
-        date: match.startTime
+        startTime: match.startTime
       };
     });
-  
-  // var mmr = account.Matches
-    // .reduce(function(matchesByDate, match) {
-    //   if (matchesByDate.length === 0) return matchesByDate.concat(match);
-    //   if (matchesByDate[matchesByDate.length - 1].day === match.day) {
-    //     matchesByDate[matchesByDate.length - 1].change += match.change;
-    //     return matchesByDate;
-    //   } else {
-    //     while ((matchesByDate[matchesByDate.length - 1].day + 1) % 7 !== match.day) {
-    //       matchesByDate.push({
-    //         change: matchesByDate[matchesByDate.length - 1].change,
-    //         day: (matchesByDate[matchesByDate.length - 1].day + 1) % 7
-    //       });
-    //     }
-    //     return matchesByDate.concat(match);
-    //   }
-    // }, []);
   
   changes.username = account.username;
   return changes;

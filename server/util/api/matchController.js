@@ -1,6 +1,10 @@
 var Boom = require('boom');
 var db = require('../../../models');
 var _ = require('lodash');
+var http_request = require('request');
+var config = require('config');
+
+var steam_key = config.get('steam').api_key;
 
 var Account = db.account;
 var Match = db.match;
@@ -34,12 +38,22 @@ var matchController = {
         
     match.win = match.mmrChange >= 0;
     
-    Match.create(match).then(function(result) {
-      console.log('created match', result);
-      reply(result);
-    }, function(err) {
-      reply(Boom.wrap(err, 422));
-    });
+    var url = 'https://api.steampowered.com/IDOTA2Match_570/GetMatchDetails/V001/?match_id=' + match.matchID + '&key=' + steam_key;
+    
+    if (!match.startTime || !match.hero) {
+      
+      http_request.get(url, function (err, res, body) {
+        var result = JSON.parse(body).result;
+        
+        match.hero = getHero(result.players, match.accountID);
+        match.startTime = parseInt(result.start_time) * 1000;
+        
+        createMatch(match, reply);
+      });
+      
+    } else {
+      createMatch(match, reply);
+    }
     
   },
   
@@ -79,5 +93,24 @@ var matchController = {
     reply(Boom.methodNotAllowed('That method is not allowed. Get that shit outta here.'));
   }
 };
+
+function getHero(array, accountID) {
+  for (var i = 0; i < array.length; i ++) {
+    console.log(accountID + ' === ' + array[i].account_id);
+    if ('_' + array[i].account_id === accountID) {
+      return array[i].hero_id;
+    }
+  }
+  return -1;
+}
+
+function createMatch(match, reply) {
+  Match.create(match).then(function(result) {
+    console.log('created match', result);
+    reply(result);
+  }, function(err) {
+    reply(Boom.wrap(err, 422));
+  });  
+}
 
 module.exports = matchController;
