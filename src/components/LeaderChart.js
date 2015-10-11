@@ -1,6 +1,7 @@
 var React = require('react');
 var ChartistGraph = require('react-chartist');
 var $ = require('jquery');
+var moment = require('moment');
 
 var LeaderChart = React.createClass({
 
@@ -24,6 +25,11 @@ var LeaderChart = React.createClass({
           
           if (count === 0) {
             // all accounts returned
+            
+            state_accounts = state_accounts.map(function(account) {
+              return parseAccount(account);
+            });
+            
             _this.setState({ accounts: state_accounts });
           }
         });
@@ -36,28 +42,92 @@ var LeaderChart = React.createClass({
     
   render: function() {
     
+    var labels = makeHours("2015-9-28");
+    
+    var series = this.state.accounts.map(function(matches) {
+      // account is an array of matches
+      
+      return matches.map(function(match) {
+        return match.change;
+      });
+    });
+        
     var options = {
-      high: 10,
-      low: -10,
+      high: 100,
+      low: -100,
       axisX: {
         labelInterpolationFnc: function(value, index) {
-          return index % 2 === 0 ? value : null;
+          return index % 12 === 0 ? value : null;
         }
       }
     };
     
     var data = {
-      labels: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7', 'W8', 'W9', 'W10'],
-      series: [
-        [1, 2, 4, 8, 6, -2, -1, -4, -6, -2]
-      ]
+      labels: labels,
+      series: series
     };
     
-    return (
-      <ChartistGraph data={data} options={options} type="Bar" />
-    );
+    if (series.length) {
+      return (
+        <ChartistGraph data={data} options={options} type="Line" />
+      );
+    } else {
+      return (
+        <div>Gettin data!</div>
+      );
+    }
   }
   
 });
+
+function makeHours(start) {
+  var now = moment();
+  start = moment(start);
+  var result = [];
+    
+  while (start.isBefore(now)) {
+    result.push(start.format());
+    start.set('hour', start.get('hour') + 1);
+  }
+  
+  return result;
+}
+
+function parseAccount(account) {
+  var oneWeekAgo = moment().date(moment().date() - 7);
+  var baseline = account.startingMMR;
+  var current = baseline;
+    
+  var changes = account.Matches
+    // .filter(function(match) { return moment(match.startTime).isAfter(oneWeekAgo); })
+    .map(function(match) {
+      current += match.mmrChange;
+      return {
+        change: current - baseline,
+        mmr: current,
+        date: match.startTime
+      };
+    });
+  
+  // var mmr = account.Matches
+    // .reduce(function(matchesByDate, match) {
+    //   if (matchesByDate.length === 0) return matchesByDate.concat(match);
+    //   if (matchesByDate[matchesByDate.length - 1].day === match.day) {
+    //     matchesByDate[matchesByDate.length - 1].change += match.change;
+    //     return matchesByDate;
+    //   } else {
+    //     while ((matchesByDate[matchesByDate.length - 1].day + 1) % 7 !== match.day) {
+    //       matchesByDate.push({
+    //         change: matchesByDate[matchesByDate.length - 1].change,
+    //         day: (matchesByDate[matchesByDate.length - 1].day + 1) % 7
+    //       });
+    //     }
+    //     return matchesByDate.concat(match);
+    //   }
+    // }, []);
+  
+  changes.username = account.username;
+  return changes;
+}
 
 module.exports = LeaderChart;
