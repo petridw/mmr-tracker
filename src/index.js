@@ -8,9 +8,9 @@ var Main = React.createClass({
   render: function() {
     return (
       <main>
-        <div>
-          <MatchEntry />
-        </div>
+        // <div>
+        //   <MatchEntry />
+        // </div>
         <div id="leaderChart">
           <LeaderChart />        
         </div>
