@@ -58,7 +58,7 @@ var LeaderChart = React.createClass({
       height: '500px',
       axisX: {
         labelInterpolationFnc: function(value, index) {
-          return moment(value).format('MMM D YYYY');
+          return moment(value).format('MMM DD YYYY');
         }
       }
     };
