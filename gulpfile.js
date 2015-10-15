@@ -46,7 +46,7 @@ function compileScssSourcemaps() {
 }
 
 function watchScss() {
-  gulp.watch('./scss/*.scss', ['sass-dev']);
+  gulp.watch('./scss/*.scss', ['scss-dev']);
 }
   
 function bundle() {

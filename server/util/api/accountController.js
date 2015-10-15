@@ -9,7 +9,11 @@ var Match = db.match;
 
 var accountController = {
   getAll: function(req, reply) {
-    Account.findAll().then(function(accounts) {
+    Account.findAll({
+      include: [
+        { model: Match, as: 'Matches' }
+      ]
+    }).then(function(accounts) {
       reply(accounts);  
     },
     function(err) {

@@ -31,6 +31,9 @@ exports.register = function(server, options, next) {
           directory: {
             path: 'build'
           }
+        },
+        config: {
+          cache: { expiresIn: 5 }
         }
       }
     ]);

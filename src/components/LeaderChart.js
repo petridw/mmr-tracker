@@ -2,11 +2,12 @@ var React = require('react');
 var ChartistGraph = require('react-chartist');
 var $ = require('jquery');
 var moment = require('moment');
+var parseAccounts = require('../helpers/parseAccounts');
 
 var LeaderChart = React.createClass({
 
   getInitialState: function() {
-    return { accounts: [] };
+    return { accounts: [], labels: [], series: [] };
   },
   
   componentDidMount: function() {
@@ -14,80 +15,45 @@ var LeaderChart = React.createClass({
     var state_accounts = [];
     var count;
     
-    $.get('/api/accounts', function(accounts) {
-      if (!accounts) return console.log('ERROR');
-      count = accounts.length;
+    $.get('/api/accounts', function(data) {
+      if (!data) return console.log('ERROR');
       
-      accounts.forEach(function(account) {
-        $.get('/api/account/' + account.accountID, function(account) {
-          state_accounts.push(account);
-          count -= 1;
-          
-          if (count === 0) {
-            // all accounts returned
-            
-            state_accounts = state_accounts.map(function(account) {
-              return parseAccount(account);
-            });
-            
-            _this.setState({ accounts: state_accounts });
-          }
+      // _this.setState({ accounts: parseAccounts(data, { unit: 'day' }) });
+      var accounts = parseAccounts(data, { unit: 'day' });
+      
+      var series = accounts.map(function(account, index) {
+        var data = account.map(function(time_unit){
+          return time_unit.netChange;
         });
+        return {
+          name: account.username,
+          data: data,
+          className: 'ct-series-' + (index + 1),
+          key: account.accountID
+        };
+      });
+      var labels = accounts[0].map(function(time_unit){
+        return time_unit.time;
       });
       
+      _this.setState({
+        accounts: accounts,
+        labels: labels,
+        series: series
+      });
     });
     
     
   },
     
   render: function() {
-    
-    var labels = makeTimes("2015-9-28", 'day');
         
-    var series = this.state.accounts.map(function(matches) {
-      // account is an array of matches
-      var current = 0;
-      var result = labels
-        .map(function(label, index, array) {
-          var todaysMatches = matches
-            .filter(function(match, index) {
-              return moment(match.startTime).isSame(moment(label), 'day');
-            });
-          
-          if (todaysMatches.length === 0) {
-              return null;
-          } else {
-            // console.log(todaysMatches);
-            return todaysMatches
-              .reduce(function(acc, match) {
-                if (moment(match.startTime).isAfter(moment(acc.startTime))) {
-                  match.change = acc.change;
-                  return match;
-                } else {
-                  acc.change = match.change;
-                  return acc;
-                }
-              });
-          }
-        })
-        .map(function(day){
-          if (day) {
-            current = day.change;
-            return day.change;
-          } else {
-            return current;
-          }
-        });
-      
-      return {
-        // className: matches.username,
-        name: matches.username,
-        data: result
-      };
+    var labelNames = this.state.series.map(function(s, index) {
+      return <li className={"username ct-series-" + (index + 1)} key={s.key}>{s.name}</li>;
     });
-            
+    
     var options = {
-      high: 200,
+      high: 300,
       low: -200,
       height: '500px',
       axisX: {
@@ -98,13 +64,18 @@ var LeaderChart = React.createClass({
     };
     
     var data = {
-      labels: labels,
-      series: series
+      labels: this.state.labels,
+      series: this.state.series
     };
     
-    if (series.length) {
+    if (this.state.series.length) {
       return (
-        <ChartistGraph data={data} options={options} type="Line" />
+        <div>
+          <ChartistGraph data={data} options={options} type="Line" />
+          <ul>
+            {labelNames}
+          </ul>
+        </div>
       );
     } else {
       return (
@@ -115,44 +86,5 @@ var LeaderChart = React.createClass({
   
 });
 
-function makeTimes(start, unit) {
-  var now = moment();
-  start = moment(start);
-  var result = [];
-    
-  while (start.isBefore(now)) {
-    result.push(start.format());
-    start.set(unit, start.get(unit) + 1);
-  }
-  
-  return result;
-}
-
-function parseAccount(account) {
-  var oneWeekAgo = moment().date(moment().date() - 7);
-  var baseline = account.startingMMR;
-  var current = baseline;
-    
-  var changes = account.Matches
-    // .filter(function(match) { return moment(match.startTime).isAfter(oneWeekAgo); })
-    .map(function(match) {
-      current += match.mmrChange;
-      // if (account.username === 'sandfriend') {
-      //   console.log({
-      //     change: current - baseline,
-      //     mmr: current,
-      //     startTime: match.startTime
-      //   });
-      // }
-      return {
-        change: current - baseline,
-        mmr: current,
-        startTime: match.startTime
-      };
-    });
-  
-  changes.username = account.username;
-  return changes;
-}
 
 module.exports = LeaderChart;

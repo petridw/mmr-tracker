@@ -1,0 +1,23 @@
+#leaderChart {
+  
+  @for $i from 1 through length($ct-series-names) {
+   .ct-series-#{$i} {
+      color: nth($ct-series-colors, $i);
+      
+      transition: color 1s ease-in 0;
+      
+      &:hover {
+        // transition: color 1s ease-in 0;
+        // cursor: pointer;
+        // background-color: nth($ct-series-colors, $i);
+        // color: white;
+      }
+    }
+  }
+  
+  .username {
+    list-style-type: none;
+    font: bold 20px/1.2em Verdana;
+  }
+  
+}
