@@ -17,19 +17,15 @@ var customOpts = {
   debug: true
 };
 
-var opts = assign({}, watchify.args, customOpts);
-var b = watchify(browserify(opts));
+var b;
 
-b.transform(babelify);
-
-gulp.task('js', bundle);
+gulp.task('js:watch', watchJs);
+gulp.task('js:build', buildJs);
+gulp.task('js:build-dev', bundleJsSourcemaps);
 gulp.task('serve', serve);
-gulp.task('scss', compileScss);
+gulp.task('scss:build', compileScss);
 gulp.task('scss-dev', compileScssSourcemaps);
 gulp.task('scss:watch', watchScss);
-
-b.on('update', bundle);
-b.on('log', gutil.log); //output build logs to terminal
 
 function compileScss() {
   gulp.src('./scss/application.scss')
@@ -48,8 +44,40 @@ function compileScssSourcemaps() {
 function watchScss() {
   gulp.watch('./scss/*.scss', ['scss-dev']);
 }
+
+function watchJs() {
+  var opts = assign({}, watchify.args, customOpts);
+  b = watchify(browserify(opts));
+  b.transform(babelify);
+  b.on('update', bundleJsSourcemaps);
+  b.on('log', gutil.log); //output build logs to terminal
+}
+
+function buildJs(done) {
+  b = browserify(customOpts);
+  b.transform(babelify);
+  return b.bundle()
+    .on('error', gutil.log.bind(gutil, 'Browserify Error'))
+    .pipe(source('bundle.js'))
+    .pipe(buffer())
+    .pipe(uglify())
+    .on('error', gutil.log)
+    .pipe(gulp.dest('./client/build'));
+}
   
-function bundle() {
+function bundleJsSourcemaps() {
+  return b.bundle()
+    .on('error', gutil.log.bind(gutil, 'Browserify Error'))
+    .pipe(source('bundle.js'))
+    .pipe(buffer())
+    .pipe(sourcemaps.init({ loadMaps: true }))
+    .pipe(uglify())
+    .on('error', gutil.log)
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest('./client/build'));
+}
+
+function bundleJs() {
   return b.bundle()
     .on('error', gutil.log.bind(gutil, 'Browserify Error'))
     .pipe(source('bundle.js'))
@@ -69,5 +97,6 @@ function serve() {
   });
 }
 
-gulp.task('dev', ['js', 'scss-dev', 'scss:watch', 'serve']);
-gulp.task('prod', ['scss', 'serve']);
+gulp.task('dev', ['js:watch', 'js:build-dev', 'scss-dev', 'scss:watch', 'serve']);
+gulp.task('build', ['js:build', 'scss:build']);
+gulp.task('prod', ['scss:build', 'serve']);
