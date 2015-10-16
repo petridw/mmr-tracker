@@ -1,5 +1,6 @@
 var React = require('react');
 var ChartistGraph = require('react-chartist');
+var MatchEntry = require('./MatchEntry');
 var $ = require('jquery');
 var moment = require('moment');
 var parseAccounts = require('../helpers/parseAccounts');
@@ -11,6 +12,10 @@ var LeaderChart = React.createClass({
   },
   
   componentDidMount: function() {
+    this.update();
+  },
+  
+  update: function() {
     var _this = this;
     var state_accounts = [];
     var count;
@@ -42,8 +47,6 @@ var LeaderChart = React.createClass({
         series: series
       });
     });
-    
-    
   },
     
   render: function() {
@@ -69,6 +72,8 @@ var LeaderChart = React.createClass({
     };
     
     if (this.state.series.length) {
+      // <MatchEntry accounts={this.state.accounts} update={this.update} />
+
       return (
         <div>
           <ChartistGraph data={data} options={options} type="Line" />

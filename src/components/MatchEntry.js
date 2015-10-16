@@ -8,10 +8,6 @@ var MatchEntry = React.createClass({
   getInitialState: function() {
     return { message: '' };
   },
-
-  handleClick: function(e) {
-    
-  },
   
   handleSubmit: function(e) {
     e.preventDefault();
@@ -32,6 +28,7 @@ var MatchEntry = React.createClass({
       
       console.log(data);
       _this.setState({ message: data });
+      _this.props.update();
     }, 'json')
       .fail(function(err) {
         console.log(err);
@@ -41,9 +38,15 @@ var MatchEntry = React.createClass({
   render: function() {
     var _this = this;
     
-    var p = _this.state.message ? (<ul>{Object.keys(_this.state.message).map(function(key) {
-      return (<li>{key} - {_this.state.message[key]}</li>);
+    console.log(this.props.accounts);
+    
+    var p = _this.state.message ? (<ul>{Object.keys(_this.state.message).map(function(key, index) {
+      return (<li key={index}>{key} - {_this.state.message[key]}</li>);
     })}</ul>) : null;
+    
+    var diffs = (<table><thead><tr><td>netChangeErr</td></tr></thead><tbody>{_this.props.accounts.map(function(account, index) {
+      return <tr key={index}><td>{account.username}</td><td>{account[account.length - 1].netChangeErr}</td></tr>;
+    })}</tbody></table>);
     
     return (
       <div id="matchForm">
@@ -53,6 +56,7 @@ var MatchEntry = React.createClass({
           <input type="text" id="mmrChange" placeholder="Enter mmr change" />
           <button onClick={this.handleSubmit}>Submit</button>
         </form>
+        {diffs}
         {p}
       </div>
     );

@@ -5,7 +5,7 @@ var cloneDeep = require('lodash/lang/cloneDeep');
 
   function parseAccounts(accounts, options) {
     var unit = options.unit || 'week';
-    var times = makeTimes("2015-09-28T08:00:00.000Z", unit);
+    var times = makeTimes("2015-09-25T08:00:00.000Z", unit);
     
     return accounts.map(function(account) {
       return parseAccount(account, cloneDeep(times), unit);
