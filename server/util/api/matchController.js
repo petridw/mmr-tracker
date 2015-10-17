@@ -107,7 +107,7 @@ function getHero(array, accountID) {
 function createMatch(match, reply) {
   Match.create(match).then(function(result) {
     console.log('created match', result);
-    reply(result);
+    reply(true);
   }, function(err) {
     reply(Boom.wrap(err, 422));
   });  
