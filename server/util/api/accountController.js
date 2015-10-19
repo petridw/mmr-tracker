@@ -103,12 +103,12 @@ var accountController = {
             method: 'POST',
             payload: match
           }, function(res) {
-            reply(res.result);
+            reply('Updated account with new match.');
           });
           
           
         } else {
-          reply(updated_account);
+          reply('No match provided, only updated account');
         }
 
         
