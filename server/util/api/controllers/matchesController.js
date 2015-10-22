@@ -67,7 +67,7 @@ var matchesController = {
       
       _.extend(result, match);
       result.save().then(function(result) {
-        console.log('Updated match', result);
+        logger.info('Updated match, ', result.matchID);
         reply(result);
       }, function(err) {
         reply(Boom.wrap(err, 422));
