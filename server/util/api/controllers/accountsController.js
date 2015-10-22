@@ -1,5 +1,5 @@
 var Boom = require('boom');
-var db = require('../../../models');
+var db = require('../../../../models');
 var _ = require('lodash');
 var Path = require('path');
 var config = require('config');
@@ -7,13 +7,17 @@ var config = require('config');
 var Account = db.account;
 var Match = db.match;
 
-var accountController = {
-  getAll: function(req, reply) {
-    Account.findAll({
-      include: [
+var accountsController = {
+  getAll: function(request, reply) {
+    var find_options = {};
+    
+    if (encodeURIComponent(request.query.matches) !== 'false') {
+      find_options.include = [
         { model: Match, as: 'Matches' }
-      ]
-    }).then(function(accounts) {
+      ];
+    }
+    
+    Account.findAll(find_options).then(function(accounts) {
       reply(accounts);  
     },
     function(err) {
@@ -28,14 +32,19 @@ var accountController = {
       return reply.redirect('/api/account/_' + accountID);
     }
     
-    Account.findOne({
+    var find_options = {
       where: {
         accountID: accountID
-      },
-      include: [
+      }
+    };
+    
+    if (encodeURIComponent(request.query.matches) !== 'false') {
+      find_options.include = [
         { model: Match, as: 'Matches' }
-      ]
-    }).then(function(account) {
+      ];
+    }
+    
+    Account.findOne(find_options).then(function(account) {
       reply(account);
     }, function(err) {
       reply(Boom.wrap(err, 422));
@@ -59,64 +68,34 @@ var accountController = {
   },
   
   update: function(request, reply) {
-    var matchID = request.payload.matchID;
-    var startTime = request.payload.startTime;
-    var mmrChange = request.payload.mmrChange;
-    var hero = request.payload.hero;
     
     var account = {
       accountID: request.payload.accountID,
-      steamID: request.payload.steamID,
-      username: request.payload.username,
-      startingMMR: request.payload.startingMMR,
-      currentMMR: request.payload.currentMMR,
-      lastPlayed: request.payload.lastPlayed || startTime
     };
+    
+    if (request.payload.steamID) account.steamID = request.payload.steamID;
+    if (request.payload.username) account.username = request.payload.username;
+    if (request.payload.startingMMR) account.startingMMR = request.payload.startingMMR;
+    if (request.payload.currentMMR) account.currentMMR = request.payload.currentMMR;
+    if (request.payload.lastPlayed) account.lastPlayed = request.payload.lastPlayed;
     
     Account.findOne({
       where: {
-        accountID: account.accountID
+        accountID: request.payload.accountID
       }
     }).then(function(result) {
       if (!result) return reply(Boom.notFound('Record was not found. Please create before updating.'));
-      
-      console.log('Updated account', result);
-      
+            
       _.extend(result, account);
       result.save().then(function(updated_account) {
         
-        var server = require(Path.join(__dirname, '../../index.js'));
-        
-        if (matchID && startTime && mmrChange) {
-            
-          var match = {
-            matchID: matchID,
-            accountID: account.accountID,
-            mmrChange: mmrChange,
-            startTime: startTime,
-            hero: hero
-          };
-          
-          // why do this when I can make a match directly w the db?
-          server.inject({
-            url: '/api/match',
-            method: 'POST',
-            payload: match
-          }, function(res) {
-            reply('Updated account with new match.');
-          });
-          
-          
-        } else {
-          reply('No match provided, only updated account');
-        }
-
-        
+        return reply(updated_account);
+                
       }, function(err) {
-        reply(Boom.wrap(err, 422));
+        return reply(Boom.wrap(err, 422));
       });
     }, function(err) {
-      reply(Boom.wrap(err, 422));
+      return reply(Boom.wrap(err, 422));
     });
   },
   
@@ -145,4 +124,4 @@ var accountController = {
   }
 };
 
-module.exports = accountController;
+module.exports = accountsController;

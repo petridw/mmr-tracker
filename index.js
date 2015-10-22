@@ -5,7 +5,7 @@ var config = require('config');
 // var db = require('./util/db/sequelize');
 // var Account = require('./util/models/Account');
 // var Match = require('./util/models/Match');
-var db = require('../models');
+var db = require('./models');
 
 var server = new Hapi.Server({
   connections: {
@@ -21,7 +21,7 @@ server.connection({
     routes: {
       cors: true,
       files: {
-        relativeTo: Path.join(__dirname, '/../client')
+        relativeTo: Path.join(__dirname, './client')
       }
     }
 });
@@ -40,13 +40,16 @@ server.register([
     }
   },
   {
-    register: require('./util/static/static')
+    register: require('./server/util/static')
   },
   {
-    register: require('./util/api/accountRoutes')
+    register: require('./server/util/api/routes/accountRoutes')
   },
   {
-    register: require('./util/api/matchRoutes')
+    register: require('./server/util/api/routes/matchRoutes')
+  },
+  {
+    register: require('./server/util/methods/steam')
   }
 ], function (err) {
     if (err) throw err;

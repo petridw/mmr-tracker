@@ -1,7 +1,8 @@
 var Boom = require('boom');
-var db = require('../../../models');
+var db = require('../../../../models');
 var _ = require('lodash');
 var http_request = require('request');
+var server = require('../../../../');
 var config = require('config');
 
 var steam_key = config.get('steam').api_key;
@@ -9,7 +10,7 @@ var steam_key = config.get('steam').api_key;
 var Account = db.account;
 var Match = db.match;
 
-var matchController = {
+var matchesController = {
   getAll: function(req, reply) {
     Match.findAll().then(function(matches) {
       reply(matches);  
@@ -37,23 +38,20 @@ var matchController = {
     var match = request.payload;
         
     match.win = match.mmrChange >= 0;
-    
-    var url = 'https://api.steampowered.com/IDOTA2Match_570/GetMatchDetails/V001/?match_id=' + match.matchID + '&key=' + steam_key;
-    
+        
     if (!match.startTime || !match.hero) {
       
-      http_request.get(url, function (err, res, body) {
-        var result = JSON.parse(body).result;
+      server.getMatchDetails(match.matchID, function (err, result) {
         
         match.hero = getHero(result.players, match.accountID);
         match.startTime = parseInt(result.start_time) * 1000;
         
-        createMatch(match, reply);
+        return createMatch(match, reply);
       });
       
-    } else {
-      createMatch(match, reply);
     }
+    
+    return createMatch(match, reply);
     
   },
   
@@ -113,4 +111,4 @@ function createMatch(match, reply) {
   });  
 }
 
-module.exports = matchController;
+module.exports = matchesController;

@@ -1,5 +1,5 @@
 var Joi = require('joi');
-var matchController = require('./matchController');
+var matchesController = require('../controllers/matchesController');
 
 exports.register = function(server, options, next) {
 
@@ -7,17 +7,17 @@ exports.register = function(server, options, next) {
     {
       method: 'GET',
       path: '/api/matches',
-      handler: matchController.getAll
+      handler: matchesController.getAll
     },
     {
       method: 'GET',
       path: '/api/match/{match}',
-      handler: matchController.get
+      handler: matchesController.get
     },
     {
       method: 'POST',
       path: '/api/match',
-      handler: matchController.create,
+      handler: matchesController.create,
       config: {
         validate: {
           payload: {
@@ -33,7 +33,7 @@ exports.register = function(server, options, next) {
     {
       method: 'PUT',
       path: '/api/match',
-      handler: matchController.upsert,
+      handler: matchesController.upsert,
       config: {
         validate: {
           payload: {
@@ -49,7 +49,7 @@ exports.register = function(server, options, next) {
     {
       method: 'DELETE',
       path: '/api/match/{match}',
-      handler: matchController.delete
+      handler: matchesController.delete
     }
   ]);
   
@@ -57,5 +57,5 @@ exports.register = function(server, options, next) {
 };
 
 exports.register.attributes = {
-    name: 'matchAPI'
+    name: 'matchRoutes'
 };

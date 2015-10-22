@@ -1,23 +1,23 @@
 var Joi = require('joi');
-var accountController = require('./accountController');
+var accountsController = require('../controllers/accountsController');
 
 exports.register = function(server, options, next) {
 
   server.route([
     {
       method: 'GET',
-      path: '/api/accounts',
-      handler: accountController.getAll
+      path: '/api/accounts/{matches?}',
+      handler: accountsController.getAll
     },
     {
       method: 'GET',
-      path: '/api/account/{account}',
-      handler: accountController.get
+      path: '/api/account/{account}/{matches?}',
+      handler: accountsController.get
     },
     {
       method: 'POST',
       path: '/api/account',
-      handler: accountController.create,
+      handler: accountsController.create,
       config: {
         validate: {
           payload: {
@@ -33,7 +33,7 @@ exports.register = function(server, options, next) {
     {
       method: 'PUT',
       path: '/api/account',
-      handler: accountController.update,
+      handler: accountsController.update,
       config: {
         validate: {
           payload: {
@@ -42,11 +42,7 @@ exports.register = function(server, options, next) {
             username: Joi.string(),
             startingMMR: Joi.number().integer().positive(),
             currentMMR: Joi.number().integer().positive(),
-            matchID: Joi.string(),
-            startTime: Joi.date(),
-            mmrChange: Joi.number().integer(),
             lastPlayed: Joi.date(),
-            hero: Joi.number().integer()
           }
         }
       }
@@ -54,7 +50,7 @@ exports.register = function(server, options, next) {
     {
       method: 'DELETE',
       path: '/api/account/{account}',
-      handler: accountController.delete
+      handler: accountsController.delete
     }
   ]);
   
@@ -62,5 +58,5 @@ exports.register = function(server, options, next) {
 };
 
 exports.register.attributes = {
-    name: 'accountAPI'
+    name: 'accountRoutes'
 };

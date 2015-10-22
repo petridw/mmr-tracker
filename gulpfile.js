@@ -91,7 +91,7 @@ function bundleJs() {
 
 function serve() {
   nodemon({
-    script: './server/index.js',
+    script: './index.js',
     ext: 'html js',
     ignore: ['client/']
   });
