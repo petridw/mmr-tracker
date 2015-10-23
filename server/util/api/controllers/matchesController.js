@@ -2,7 +2,6 @@ var Boom = require('boom');
 var db = require('../../../../models');
 var _ = require('lodash');
 var http_request = require('request');
-var server = require('../../../../');
 var config = require('config');
 
 var steam_key = config.get('steam').api_key;
@@ -34,24 +33,27 @@ var matchesController = {
     });
   },
   
-  create: function(request, reply) {
+  create: function(server, request, reply) {
     var match = request.payload;
         
     match.win = match.mmrChange >= 0;
         
     if (!match.startTime || !match.hero) {
       
-      server.getMatchDetails(match.matchID, function (err, result) {
+      server.methods.getMatchDetails(match.matchID, function (err, result) {
+        if (err) throw new Error(err);
         
         match.hero = getHero(result.players, match.accountID);
         match.startTime = parseInt(result.start_time) * 1000;
         
+        console.log(`creating match ${match}`);
+        
         return createMatch(match, reply);
       });
       
+    } else {
+      return createMatch(match, reply);  
     }
-    
-    return createMatch(match, reply);
     
   },
   
@@ -67,7 +69,7 @@ var matchesController = {
       
       _.extend(result, match);
       result.save().then(function(result) {
-        logger.info('Updated match, ', result.matchID);
+        console.log('Updated match, ', result.matchID);
         reply(result);
       }, function(err) {
         reply(Boom.wrap(err, 422));
@@ -103,12 +105,34 @@ function getHero(array, accountID) {
 }
 
 function createMatch(match, reply) {
-  Match.create(match).then(function(result) {
-    console.log('created match', result);
-    reply(true);
+  
+  findOne(match.matchID, function(err, result) {
+    if (err) throw new Error(err);
+    
+    console.log(result);
+    // If matchID already exists, return false for now
+    if (result) return reply(false);
+    console.log(match);
+    
+    Match.create(match).then(function(result) {
+      console.log(`Created new match ${match.matchID}`);
+      return reply(true);
+    }, function(err) {
+      return reply(Boom.wrap(err, 422));
+    });
+  });
+}
+
+function findOne(matchID, next) {
+  Match.findOne({
+    where: {
+      matchID: matchID
+    }
+  }).then(function(found_match) {
+    return next(null, found_match);
   }, function(err) {
-    reply(Boom.wrap(err, 422));
-  });  
+    return next(err);
+  });
 }
 
 module.exports = matchesController;

@@ -1,0 +1,24 @@
+#reconcileForm {
+  tr {
+    &.haveMatch {
+      background: transparentize(darkgreen, .5);
+    }
+    &.needMatch {
+      background: transparentize(tomato, .5);
+    }
+  }
+  
+  display: flex;
+  flex-direction: row;
+  
+  .component {
+    flex: auto;
+  }
+}
+
+.component {
+  border-radius: 3px;
+  border: 1px solid gainsboro;
+  padding: 10px;
+  margin: 10px;
+}

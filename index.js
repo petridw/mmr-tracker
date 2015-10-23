@@ -43,13 +43,13 @@ server.register([
     register: require('./server/util/static')
   },
   {
+    register: require('./server/util/methods/steam')
+  },
+  {
     register: require('./server/util/api/routes/accountRoutes')
   },
   {
     register: require('./server/util/api/routes/matchRoutes')
-  },
-  {
-    register: require('./server/util/methods/steam')
   }
 ], function (err) {
     if (err) throw err;

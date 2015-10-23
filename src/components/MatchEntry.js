@@ -1,5 +1,4 @@
 var React = require('react');
-var ChartistGraph = require('react-chartist');
 var $ = require('jquery');
 var moment = require('moment');
 
@@ -49,7 +48,7 @@ var MatchEntry = React.createClass({
     })}</tbody></table>);
     
     return (
-      <div id="matchForm">
+      <div id="matchForm" className="component">
         <form>
           <input type="text" id="accountID" placeholder="Enter account ID" />
           <input type="text" id="matchID" placeholder="Enter match ID" />

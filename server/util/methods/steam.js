@@ -25,6 +25,25 @@ exports.register = function(server, options, next) {
     });
     
   });
+    
+  server.method('getMatchHistory', function getMatchHistory(accountID, next) {
+    
+    var url = `https://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/v1?key=${steam_key}&account_id=${accountID}`;
+    
+    http_request.get(url, function(err, response, body) {
+      var result;
+      if (err) return next(err);
+      
+      try {
+        result = JSON.parse(body).result.matches;
+      } catch (error) {
+        return next(result);
+      }
+      
+      return next(null, result);
+    });
+    
+  });
   
   next();
 };

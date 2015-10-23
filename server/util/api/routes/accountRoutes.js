@@ -51,6 +51,11 @@ exports.register = function(server, options, next) {
       method: 'DELETE',
       path: '/api/account/{account}',
       handler: accountsController.delete
+    },
+    {
+      method: 'GET',
+      path: '/api/matchHistory/{account}',
+      handler: accountsController.getMatchHistory.bind(null, server)
     }
   ]);
   

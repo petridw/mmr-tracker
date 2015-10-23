@@ -17,7 +17,7 @@ exports.register = function(server, options, next) {
     {
       method: 'POST',
       path: '/api/match',
-      handler: matchesController.create,
+      handler: matchesController.create.bind(null, server),
       config: {
         validate: {
           payload: {

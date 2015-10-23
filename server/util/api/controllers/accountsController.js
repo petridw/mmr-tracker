@@ -99,28 +99,19 @@ var accountsController = {
     });
   },
   
-  upsert: function(request, reply) {
-    var account = request.payload;
-    var matchID = account.matchID;
-    delete account.matchID;
-    
-    Account.upsert(account).then(function(created) {
-      
-      server.inject({
-        url: '/api/match',
-        method: 'POST',
-        payload: { matchID: matchID, accountID: account.accountID }
-      }, function(response) {
-        reply(created);
-      });
-      
-    }, function(err) {
-      reply(Boom.wrap(err, 422));
-    });
-  },
-  
   delete: function(request, reply) {
     reply(Boom.methodNotAllowed('That method is not allowed. Get that shit outta here.'));
+  },
+  
+  getMatchHistory: function(server, request, reply) {
+    var accountID = encodeURIComponent(request.params.account);
+    
+    accountID = accountID.charAt(0) === '_' ? accountID.substring(1) : accountID;
+    
+    server.methods.getMatchHistory(accountID, function(err, result) {
+      if (err) throw new Error(err);
+      return reply(result);
+    });
   }
 };
 
