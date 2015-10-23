@@ -33,7 +33,7 @@ exports.register = function(server, options, next) {
     {
       method: 'PUT',
       path: '/api/match',
-      handler: matchesController.upsert,
+      handler: matchesController.update,
       config: {
         validate: {
           payload: {

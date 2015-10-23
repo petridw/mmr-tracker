@@ -60,6 +60,8 @@ var matchesController = {
   update: function(request, reply) {
     var match = request.payload;
     
+    console.log('Updating match ' + match);
+    
     Match.findOne({
       where: {
         matchID: match.matchID
