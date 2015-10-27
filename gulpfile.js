@@ -13,7 +13,7 @@ var sass = require('gulp-sass');
 var concatCss = require('gulp-concat-css');
 
 var customOpts = {
-  entries: ['./src/index.js'],
+  entries: ['./src/app.js'],
   debug: true
 };
 

@@ -3,8 +3,9 @@ var ChartistGraph = require('react-chartist');
 var $ = require('jquery');
 var moment = require('moment');
 var parseAccounts = require('../helpers/parseAccounts');
-// var ReconcileAccounts = require('./ReconcileAccounts');
-// var MatchEntry = require('./MatchEntry');
+var ReconcileAccounts = require('./ReconcileAccounts');
+var MatchEntry = require('./MatchEntry');
+
 
 var LeaderChart = React.createClass({
 
@@ -14,41 +15,6 @@ var LeaderChart = React.createClass({
   
   componentDidMount: function() {
     this.update();
-  },
-  
-  update: function() {
-    var _this = this;
-    var state_accounts = [];
-    var count;
-    
-    $.get('/api/accounts', function(data) {
-      if (!data) return console.log('ERROR');
-      
-      // _this.setState({ accounts: parseAccounts(data, { unit: 'day' }) });
-      var accounts = parseAccounts(data, { unit: 'day' });
-      
-      var series = accounts.map(function(account, index) {
-        var data = account.map(function(time_unit){
-          return time_unit.netChange;
-        });
-        return {
-          name: account.username,
-          data: data,
-          className: 'ct-series-' + (index + 1),
-          key: account.accountID
-        };
-      });
-      var labels = accounts[0].map(function(time_unit){
-        return time_unit.time;
-      });
-      
-      _this.setState({
-        accounts: accounts,
-        labels: labels,
-        series: series,
-        rawAccounts: data
-      });
-    });
   },
     
   render: function() {
@@ -73,12 +39,11 @@ var LeaderChart = React.createClass({
       series: this.state.series
     };
     
-    // <MatchEntry accounts={this.state.accounts} update={this.update} />
-    // <ReconcileAccounts accounts={this.state.rawAccounts} update={this.update} />
-    
     if (this.state.series.length) {
       return (
         <div>
+          <MatchEntry accounts={this.state.accounts} update={this.update} />
+          <ReconcileAccounts accounts={this.state.rawAccounts} update={this.update} />
           <ChartistGraph data={data} options={options} type="Line" />
           <ul>
             {labelNames}
