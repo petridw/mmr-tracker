@@ -1,4 +1,4 @@
-#leaderChart {
+#mmr-line-chart {
   
   @for $i from 1 through length($ct-series-names) {
    .ct-series-#{$i} {

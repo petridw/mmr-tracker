@@ -1,56 +1,56 @@
-/*
- * Copyright (c) 2014, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * TodoStore
- */
+// The store registers for events it wants to watch
+// When an event comes in that the store cares about, it modifies its state
+// accordingly
 
-var AppDispatcher = require('../dispatcher/MMRAppDispatcher');
+var MMRAppDispatcher = require('../dispatcher/MMRAppDispatcher');
 var EventEmitter = require('events').EventEmitter;
-var AccountConstants = require('../constants/AccountConstants');
-var assign = require('lodash/object/assign');
+var AccountActionTypes = require('../constants/AccountConstants').ActionTypes;
+var MMRApiUtils = require('../utils/MMRApiUtils');
+
+var assign = require('object-assign');
 
 var CHANGE_EVENT = 'change';
 
-var _accounts = {};
-
+var accounts = [];
 
 var AccountStore = assign({}, EventEmitter.prototype, {
+  
+  initialize: function() {
+    MMRApiUtils.getAllAccounts();
+  },
 
-  /**
-   * Get the entire collection of TODOs.
-   * @return {object}
-   */
   getAll: function() {
-    return _accounts;
+    console.log('getting accounts from store, ', accounts);
+    return accounts;
+  },
+  
+  getAccount: function(index) {
+    return accounts[index];
   },
 
   emitChange: function() {
     this.emit(CHANGE_EVENT);
   },
 
-  /**
-   * @param {function} callback
-   */
   addChangeListener: function(callback) {
     this.on(CHANGE_EVENT, callback);
   },
 
-  /**
-   * @param {function} callback
-   */
   removeChangeListener: function(callback) {
     this.removeListener(CHANGE_EVENT, callback);
   }
 });
 
 // Register callback to handle all updates
-AppDispatcher.register(function(action) {
-  
+AccountStore.dispatchToken = MMRAppDispatcher.register(function(payload) {
+  switch(payload.action.type) {
+    case AccountActionTypes.RECEIVE_RAW_ACCOUNTS:
+      accounts = payload.action.rawAccounts;
+      AccountStore.emitChange();
+      break;
+  }
 });
+
+AccountStore.initialize();
 
 module.exports = AccountStore;
