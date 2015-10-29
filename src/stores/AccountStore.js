@@ -20,7 +20,6 @@ var AccountStore = assign({}, EventEmitter.prototype, {
   },
 
   getAll: function() {
-    console.log('getting accounts from store, ', accounts);
     return accounts;
   },
   

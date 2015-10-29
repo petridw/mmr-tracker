@@ -4,14 +4,19 @@
    .ct-series-#{$i} {
       color: nth($ct-series-colors, $i);
       
-      transition: color 1s ease-in 0;
+      -webkit-transition: .5s ease-in;
+      -moz-transition: .5s ease-in;
+      -o-transition: .5s ease-in;
+      -ms-transition: .5s ease-in;
+      transition: .5s ease-in;
       
       &:hover {
-        // transition: color 1s ease-in 0;
-        // cursor: pointer;
-        // background-color: nth($ct-series-colors, $i);
-        // color: white;
+        cursor: pointer;
+        background-color: nth($ct-series-colors, $i);
+        color: white;
+        
       }
+
     }
   }
   
@@ -20,4 +25,25 @@
     font: bold 20px/1.2em Verdana;
   }
   
+  ul {
+    padding: 0 40px;
+  }
+  
+}
+
+@keyframes hover {
+  from {
+    stroke-width: 4px;
+  }
+  to {
+    stroke-width: 10px;
+  }
+}
+@keyframes leave {
+  from {
+    stroke-width: 10px;
+  }
+  to {
+    stroke-width: 4px;
+  }
 }

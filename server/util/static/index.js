@@ -11,6 +11,12 @@ exports.register = function(server, options, next) {
         path: '/',
         handler: {
           file: 'index.html'
+        },
+        config: {
+          cache: {
+              expiresIn: 30,
+              privacy: 'private'
+          }
         }
       },
       
@@ -21,6 +27,12 @@ exports.register = function(server, options, next) {
           directory: {
             path: 'css'
           }
+        },
+        config: {
+          cache: {
+              expiresIn: 30,
+              privacy: 'private'
+          }
         }
       },
       
@@ -30,6 +42,12 @@ exports.register = function(server, options, next) {
         handler: {
           directory: {
             path: 'build'
+          }
+        },
+        config: {
+          cache: {
+              expiresIn: 30,
+              privacy: 'private'
           }
         }
       }
