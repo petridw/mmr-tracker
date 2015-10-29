@@ -1,6 +1,6 @@
 var Dispatcher = require('flux').Dispatcher;
 
-var assign = require('object-assign');
+var assign = require('lodash/object/assign');
 
 var MMRAppDispatcher = assign(new Dispatcher(), {
     handleServerAction: function (action) {

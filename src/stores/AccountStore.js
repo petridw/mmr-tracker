@@ -7,7 +7,7 @@ var EventEmitter = require('events').EventEmitter;
 var AccountActionTypes = require('../constants/AccountConstants').ActionTypes;
 var MMRApiUtils = require('../utils/MMRApiUtils');
 
-var assign = require('object-assign');
+var assign = require('lodash/object/assign');
 
 var CHANGE_EVENT = 'change';
 
