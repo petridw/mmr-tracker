@@ -21,7 +21,7 @@ var b;
 
 gulp.task('js:watch', watchJs);
 gulp.task('js:build', buildJs);
-gulp.task('js:build-dev', bundleJsSourcemaps);
+gulp.task('js:build-dev', bundleJsDev);
 gulp.task('serve', serve);
 gulp.task('scss:build', compileScss);
 gulp.task('scss-dev', compileScssSourcemaps);
@@ -49,7 +49,7 @@ function watchJs() {
   var opts = assign({}, watchify.args, customOpts);
   b = watchify(browserify(opts));
   b.transform(babelify);
-  b.on('update', bundleJsSourcemaps);
+  b.on('update', bundleJsDev);
   b.on('log', gutil.log); //output build logs to terminal
 }
 
@@ -65,15 +65,12 @@ function buildJs(done) {
     .pipe(gulp.dest('./client/build'));
 }
   
-function bundleJsSourcemaps() {
+// no minification or sourcemaps for dev
+function bundleJsDev() {
   return b.bundle()
     .on('error', gutil.log.bind(gutil, 'Browserify Error'))
     .pipe(source('bundle.js'))
-    .pipe(buffer())
-    .pipe(sourcemaps.init({ loadMaps: true }))
-    .pipe(uglify())
     .on('error', gutil.log)
-    .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('./client/build'));
 }
 
@@ -99,4 +96,5 @@ function serve() {
 
 gulp.task('dev', ['js:watch', 'js:build-dev', 'scss-dev', 'scss:watch', 'serve']);
 gulp.task('build', ['js:build', 'scss:build']);
+gulp.task('build-dev', ['js:build-dev', 'scss:build']);
 gulp.task('prod', ['scss:build', 'serve']);
