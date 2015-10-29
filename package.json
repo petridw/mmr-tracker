@@ -25,6 +25,7 @@
     "babelify": "^6.2.0",
     "boom": "^2.9.0",
     "browserify": "^11.0.1",
+    "chartist": "^0.9.4",
     "config": "^1.16.0",
     "es6-promise": "^3.0.2",
     "flux": "^2.1.1",
