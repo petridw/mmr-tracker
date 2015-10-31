@@ -48,14 +48,18 @@ function watchScss() {
 function watchJs() {
   var opts = assign({}, watchify.args, customOpts);
   b = watchify(browserify(opts));
-  b.transform(babelify);
+  b.transform(babelify.configure({
+    presets: ["react", "es2015"]
+  }));
   b.on('update', bundleJsDev);
   b.on('log', gutil.log); //output build logs to terminal
 }
 
 function buildJs(done) {
   b = browserify(customOpts);
-  b.transform(babelify);
+  b.transform(babelify.configure({
+    presets: ["react", "es2015"]
+  }));
   return b.bundle()
     .on('error', gutil.log.bind(gutil, 'Browserify Error'))
     .pipe(source('bundle.js'))

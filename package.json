@@ -1,7 +1,7 @@
 {
   "name": "mmr-site",
   "version": "1.0.0",
-  "description": "Basic site for novlovplov mmr viewing\"",
+  "description": "Basic site for novlovplov mmr viewing",
   "main": "server/server.js",
   "author": "David Petri <petridw@gmail.com> (http://davidpetri.com)",
   "engines": {
@@ -22,7 +22,9 @@
   },
   "license": "ISC",
   "dependencies": {
-    "babelify": "^6.2.0",
+    "babel-preset-es2015": "^6.0.14",
+    "babel-preset-react": "^6.0.14",
+    "babelify": "^7.0.2",
     "boom": "^2.9.0",
     "browserify": "^11.0.1",
     "chartist": "^0.9.4",
