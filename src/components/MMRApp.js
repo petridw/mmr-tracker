@@ -21,10 +21,17 @@ function getAccountState() {
   var labels;
   var series;
   
+  var chartMinY = 0;
+  var chartMaxY = 0;
+  
   series = parsedAccounts.map(function(account, index) {
     var data = account.map(function(time_unit){
       return time_unit.netChange;
     });
+    
+    chartMinY = account.min < chartMinY ? account.min : chartMinY;
+    chartMaxY = account.max > chartMaxY ? account.max : chartMaxY;
+    
     return {
       name: account.username,
       data: data,
@@ -46,7 +53,9 @@ function getAccountState() {
     accounts: parsedAccounts,
     labels: labels,
     series: series,
-    rawAccounts: accounts
+    rawAccounts: accounts,
+    minY: chartMinY,
+    maxY: chartMaxY
   };
 }
 
@@ -73,6 +82,8 @@ var MMRApp = React.createClass({
         <MMRChart
           labels={this.state.labels}
           series={this.state.series}
+          minY={this.state.minY}
+          maxY={this.state.maxY}
         />
       </div>
     );

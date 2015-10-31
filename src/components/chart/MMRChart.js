@@ -3,8 +3,7 @@ var ChartistGraph = require('react-chartist');
 var moment = require('moment');
 var $ = require('jquery');
 
-// This is a dumb component
-// It simply renders what is passed down to it
+var CHART_Y_PADDING = 30;
 
 var LeaderChart = React.createClass({
   
@@ -53,11 +52,13 @@ var LeaderChart = React.createClass({
         </li>
       );
     });
+    console.log(this.props.maxY);
+    console.log(this.props.minY);
     
     // These should be props?
     var options = {
-      high: 300,
-      low: -200,
+      high: this.props.maxY + CHART_Y_PADDING,
+      low: this.props.minY - CHART_Y_PADDING,
       height: '500px',
       axisX: {
         labelInterpolationFnc: function(value, index) {
@@ -70,6 +71,7 @@ var LeaderChart = React.createClass({
       labels: this.props.labels,
       series: this.props.series
     };
+    console.log(data);
     
     return (
       <section id="mmr-line-chart">

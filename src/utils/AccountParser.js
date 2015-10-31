@@ -31,6 +31,9 @@ function parseAccount(account, time_units, unit) {
     }
   }
   
+  var min = 0;
+  var max = 0;
+  
   time_units_with_totals = time_units.reduce(function(acc, current, index) {
     var mmrChangeSum = current.matches.reduce(function(total, match){
       return total + match.mmrChange;
@@ -46,11 +49,15 @@ function parseAccount(account, time_units, unit) {
       current.endingMMR = acc[acc.length - 1].endingMMR + mmrChangeSum;
       current.netChange = acc[acc.length - 1].netChange + mmrChangeSum;
     }
+    min = current.netChange < min ? current.netChange : min;
+    max = current.netChange > max ? current.netChange : max;
     return acc.concat(current);
   }, []);
   
   time_units_with_totals.username = account.username;
   time_units_with_totals.accountID = account.accountID;
+  time_units_with_totals.min = min;
+  time_units_with_totals.max = max;
   return time_units_with_totals;
 }
 
