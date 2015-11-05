@@ -4,7 +4,8 @@ var keyMirror = require('keymirror');
 module.exports = {
 
   ActionTypes: keyMirror({
-    RECEIVE_RAW_CREATED_MATCH: null
+    SHOW_HOVERED_MATCH_LIST: null,
+    HIDE_HOVERED_MATCH_LIST: null
   })
 
 };

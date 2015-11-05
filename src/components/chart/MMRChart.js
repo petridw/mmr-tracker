@@ -3,9 +3,21 @@ var ChartistGraph = require('react-chartist');
 var moment = require('moment');
 var $ = require('jquery');
 
+var MMRViewActions = require('../../actions/MMRViewActions');
+var MatchList = require('../matchlist/MatchList');
+
 var CHART_Y_PADDING = 30;
+var $toolTip;
 
 var LeaderChart = React.createClass({
+  
+  shouldComponentUpdate: function(nextProps, nextState) {
+    console.log('should we update?');
+    console.log('next', nextProps);
+    console.log('now', this.props);
+    console.log(this.props === nextProps);
+    return true;
+  },
   
   onMouseOver: function(index, target) {
     var animation = {
@@ -37,7 +49,46 @@ var LeaderChart = React.createClass({
     $line.css(animation);
   },
   
+  componentDidMount: function() {
+    
+    var $chart = $('.ct-chart');
+
+    $toolTip = $chart
+      .append('<div class="tooltip"></div>')
+      .find('.tooltip')
+      .hide();
+  },
+  
+  componentDidUpdate: function() {
+    var component = this;
+    var $chart = $('.ct-chart');
+    
+    $chart.on('mouseenter', '.ct-point', function() {
+      var $point = $(this);
+      
+      var seriesName = $point.parent().attr('ct:series-name');
+      var value = $point.attr('ct:value');
+      
+      var index = $point.parent().children().filter('.ct-point').index($point);
+      var account = component.props.accounts.find(function(account) {
+        return account.username === seriesName;
+      });
+      
+      var matchList = account[index];
+      
+      $toolTip.html(seriesName + '<br>' + value + '<br>' + matchList.endingMMR).show();
+      
+      MMRViewActions.showHoveredMatchList(matchList);
+    });
+    
+    $chart.on('mouseleave', '.ct-point', function() {
+      MMRViewActions.hideHoveredMatchList();
+      $toolTip.hide();
+    });
+  },
+  
   render: function() {
+    console.log('chart is rerendering');
     
     var labelNames = this.props.series.map((s, index) => {
       return (
@@ -52,8 +103,6 @@ var LeaderChart = React.createClass({
         </li>
       );
     });
-    console.log(this.props.maxY);
-    console.log(this.props.minY);
     
     // These should be props?
     var options = {
@@ -66,13 +115,16 @@ var LeaderChart = React.createClass({
         }
       }
     };
-    
+
     var data = {
       labels: this.props.labels,
       series: this.props.series
     };
-    console.log(data);
     
+    if (this.props.selectedDay) {
+      console.log('day is hovered...');
+    }
+      
     return (
       <section id="mmr-line-chart">
         <ChartistGraph data={data} options={options} type="Line" />

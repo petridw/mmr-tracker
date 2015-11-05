@@ -10,11 +10,13 @@
       -ms-transition: .5s ease-in;
       transition: .5s ease-in;
       
-      &:hover {
+      & .ct-point:hover{
         cursor: pointer;
+      }
+      
+      &:hover {
         background-color: nth($ct-series-colors, $i);
         color: white;
-        
       }
 
     }
@@ -27,6 +29,11 @@
   
   ul {
     padding: 0 40px;
+  }
+  
+  .tooltip {
+    position: absolute;
+    background: white;
   }
   
 }
