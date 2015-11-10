@@ -39,6 +39,16 @@ var MMRApp = React.createClass({
   getInitialState: function() {
     return getAppState();
   },
+  
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log('should I change state?');
+    console.log('next state:');
+    console.log(nextState);
+    console.log('this state:');
+    console.log(this.state);
+    
+    return true;
+  },
 
   componentDidMount: function() {
     AccountStore.addChangeListener(this._onChange);

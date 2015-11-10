@@ -12,10 +12,6 @@ var $toolTip;
 var LeaderChart = React.createClass({
   
   shouldComponentUpdate: function(nextProps, nextState) {
-    console.log('should we update?');
-    console.log('next', nextProps);
-    console.log('now', this.props);
-    console.log(this.props === nextProps);
     return true;
   },
   
